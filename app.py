@@ -9,7 +9,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
 from langchain_community.llms import HuggingFaceHub
-#import google.generativeai as palm
+import google.generativeai as palm
 
 # Returns a string of text from a list of PDFs
 # Uses PyPDF2 - PDF Reader
