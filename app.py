@@ -37,7 +37,7 @@ def get_text_chunks(text):
 def get_vectorstore(text_chunks):
     embeddings = OpenAIEmbeddings() #AdaV2 - paid, but less resource exhausstive, not as good as instructor either.
     #embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
-    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings).as_retriever() #FAISS - database for embeddings.
+    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings) #FAISS - database for embeddings.
     return vectorstore
 
 # Creates a conversation chain from a vector store
