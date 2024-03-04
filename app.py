@@ -46,6 +46,7 @@ def get_conversation_chain(vectorstore):
 
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
+
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorstore.as_retriever(),
@@ -91,14 +92,14 @@ def main():
                 raw_text = get_pdf_text(pdf_docs)
 
                 # get the text chunks
-                text_chunks = get_text_chunks(raw_text)
+                #text_chunks = get_text_chunks(raw_text)
 
                 # create vector store
-                vectorstore = get_vectorstore(text_chunks)
+                #vectorstore = get_vectorstore(text_chunks)
 
                 # create conversation chain
-                st.session_state.conversation = get_conversation_chain(
-                    vectorstore) #st.session_state --> don't re-initialize when using streamlit functions, can use outside of scope too.
+                #st.session_state.conversation = get_conversation_chain(
+                 #   vectorstore) #st.session_state --> don't re-initialize when using streamlit functions, can use outside of scope too.
 
 
 if __name__ == '__main__':
