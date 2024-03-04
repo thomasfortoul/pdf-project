@@ -65,7 +65,6 @@ def get_conversation_chain(vectorstore):
 def get_conversation_chain(vectorstore_db):
     llm = ChatOpenAI(
             temperature=0,
-            openai_api_key=st.secrets["openai_api_key"],
             model_name="text-davinci-003"
         )
     memory = ConversationBufferMemory(
