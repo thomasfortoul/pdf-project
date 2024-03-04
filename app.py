@@ -63,7 +63,11 @@ def get_conversation_chain(vectorstore):
 
 
 def get_conversation_chain(vectorstore_db):
-    llm = ChatOpenAI(model_name='gpt-3.5-turbo')
+    llm = ChatOpenAI(
+            temperature=0,
+            openai_api_key=st.secrets["openai_api_key"],
+            model_name="text-davinci-003"
+        )
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
 
@@ -77,19 +81,11 @@ def get_conversation_chain(vectorstore_db):
 
 def initialize_session_state():
     if "chat_history" not in st.session_state:
-        st.session_state.history = []
+        st.session_state.history = None
     if "token_count" not in st.session_state:
         st.session_state.token_count = 0
     if "conversation" not in st.session_state:
-        llm = OpenAI(
-            temperature=0,
-            openai_api_key=st.secrets["openai_api_key"],
-            model_name="text-davinci-003"
-        )
-        st.session_state.conversation = ConversationChain(
-            llm=llm,
-            memory=ConversationSummaryMemory(llm=llm),
-        )
+        st.session_state.conversation = None
 
 def handle_userinput(user_question): 
     response = st.session_state.conversation({'question': user_question})
