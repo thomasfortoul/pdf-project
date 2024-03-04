@@ -4,11 +4,17 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationalRetrievalChain
+from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
 from langchain_community.llms import HuggingFaceHub
+
+#from langchain import OpenAI
+from langchain.callbacks import get_openai_callback
+from langchain.chains import ConversationChain
+from langchain.chains.conversation.memory import ConversationSummaryMemory
+import streamlit.components.v1 as components
 
 # Returns a string of text from a list of PDFs
 # Uses PyPDF2 - PDF Reader
@@ -57,15 +63,33 @@ def get_conversation_chain(vectorstore):
 
 
 def get_conversation_chain(vectorstore_db):
-    llm = ChatOpenAI()
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo')
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
 
-    st.session_state.conversation = ConversationalRetrievalChain.from_llm(
+    chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorstore_db.as_retriever(),
         memory=memory
     )
+    return chain
+
+
+def initialize_session_state():
+    if "chat_history" not in st.session_state:
+        st.session_state.history = []
+    if "token_count" not in st.session_state:
+        st.session_state.token_count = 0
+    if "conversation" not in st.session_state:
+        llm = OpenAI(
+            temperature=0,
+            openai_api_key=st.secrets["openai_api_key"],
+            model_name="text-davinci-003"
+        )
+        st.session_state.conversation = ConversationChain(
+            llm=llm,
+            memory=ConversationSummaryMemory(llm=llm),
+        )
 
 def handle_userinput(user_question): 
     response = st.session_state.conversation({'question': user_question})
@@ -83,11 +107,8 @@ def main():
     st.set_page_config(page_title="Chat with multiple PDFs",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
-
-    if "conversation" not in st.session_state: #initialize session state to none if hasn't been started. ensures only 1 conversation.
-        st.session_state.conversation = None
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = None
+    
+    initialize_session_state()
 
     st.header("Chat with multiple PDFs :books:")
     user_question = st.text_input("Ask a question about your documents:")
@@ -96,10 +117,11 @@ def main():
 
     with st.sidebar:
         st.subheader("Your documents")
-        pdf_docs = st.file_uploader(
-            "Upload your PDFs here and click on 'Process'", type=["pdf"], accept_multiple_files=True)
+        pdf_docs = st.file_uploader("Upload your PDFs here and click on 'Process'", type=["pdf"], accept_multiple_files=True)
+        
         if st.button("Process"):
             with st.spinner("Processing"):
+
                 # get pdf text
                 raw_text = get_pdf_text(pdf_docs)
 
@@ -111,7 +133,6 @@ def main():
 
                 # create conversation chain
                 st.session_state.conversation = get_conversation_chain(vectorstore) 
-                #st.session_state --> don't re-initialize when using streamlit functions, can use outside of scope too.
 
 
 if __name__ == '__main__':
