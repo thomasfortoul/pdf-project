@@ -57,7 +57,7 @@ def get_conversation_chain(vectorstore):
 
 
 def get_conversation_chain(vectorstore_db):
-    llm = ChatOpenAI(temperature=0)
+    llm = ChatOpenAI()
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
 
