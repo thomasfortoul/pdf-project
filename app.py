@@ -2,13 +2,13 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
-from langchain_community.llms import huggingface_hub, google_palm
+from langchain.llms import huggingface_hub, google_palm
 #import google.generativeai as palm
 
 # Returns a string of text from a list of PDFs
@@ -37,7 +37,7 @@ def get_text_chunks(text):
 def get_vectorstore(text_chunks):
     embeddings = OpenAIEmbeddings() #AdaV2 - paid, but less resource exhausstive, not as good as instructor either.
     #embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
-    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings) #FAISS - database for embeddings.
+    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings).as_retriever() #FAISS - database for embeddings.
     return vectorstore
 
 # Creates a conversation chain from a vector store
