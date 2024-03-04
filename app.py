@@ -61,11 +61,10 @@ def get_conversation_chain(vectorstore_db):
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
 
-    conversation_chain = ConversationalRetrievalChain.from_llm(
+    st.session_state.conversation = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorstore_db.as_retriever(),
-        memory=memory,
-        return_source_documents=True
+        memory=memory
     )
 
 def handle_userinput(user_question): 
