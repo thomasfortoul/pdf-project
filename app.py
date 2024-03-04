@@ -4,13 +4,12 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-#from langchain_community.chat_models import ChatOpenAI
-from langchain import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
 from langchain_community.llms import HuggingFaceHub
-import google.generativeai as palm
+#import google.generativeai as palm
 
 # Returns a string of text from a list of PDFs
 # Uses PyPDF2 - PDF Reader
