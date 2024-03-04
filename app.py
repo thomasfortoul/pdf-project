@@ -80,14 +80,16 @@ def main():
     st.set_page_config(page_title="Chat with multiple PDFs",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
-    st.title("ThomasGPT")
-    st.header("Chat with multiple PDFs :books:")
-    tab1, tab2 = st.tabs(["Upload Documents", "Chat"])
-    
+
     initialize_session_state()
 
-    with tab1:
-        st.subheader("Upload your PDFs.")
+    st.header("Chat with multiple PDFs :books:")
+    user_question = st.text_input("Ask a question about your documents:")
+    if user_question:
+        handle_userinput(user_question)
+
+    with st.sidebar:
+        st.subheader("Your PDFs")
         pdf_docs = st.file_uploader("Upload your PDFs here and click on 'Process'", type=["pdf"], accept_multiple_files=True)
         
         if st.button("Process"):
@@ -104,11 +106,6 @@ def main():
 
                 # create conversation chain
                 st.session_state.conversation = get_conversation_chain(vectorstore) 
-
-    with tab2:
-        user_question = st.text_input("Ask a question about your documents:")
-        if user_question:
-            handle_userinput(user_question)
 
 
 if __name__ == '__main__':
