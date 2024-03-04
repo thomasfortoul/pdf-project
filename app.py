@@ -43,8 +43,8 @@ def get_vectorstore(text_chunks):
 # Creates a conversation chain from a vector store
 def get_conversation_chain(vectorstore):
     #llm = google_palm()
-   # llm = ChatOpenAI(model_name="gpt-3.5-turbo") #model_name="text-davinci-003"
-    llm = huggingface_hub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo") #model_name="text-davinci-003"
+    #llm = huggingface_hub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
 
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
 
