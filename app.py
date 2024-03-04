@@ -10,6 +10,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
 from langchain_community.llms import HuggingFaceHub
+import google.generativeai as palm
 
 # Returns a string of text from a list of PDFs
 # Uses PyPDF2 - PDF Reader
@@ -42,8 +43,9 @@ def get_vectorstore(text_chunks):
 
 # Creates a conversation chain from a vector store
 def get_conversation_chain(vectorstore):
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo")
-    #llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
+   
+   # llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+    llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
 
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
 
