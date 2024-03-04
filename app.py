@@ -4,17 +4,12 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_community.chat_models import ChatOpenAI
+#from langchain_community.chat_models import ChatOpenAI
+from langchain import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain, LLMChain
 from htmlTemplates import css, bot_template, user_template
 from langchain_community.llms import HuggingFaceHub
-
-#from langchain import OpenAI
-from langchain.callbacks import get_openai_callback
-from langchain.chains import ConversationChain
-from langchain.chains.conversation.memory import ConversationSummaryMemory
-import streamlit.components.v1 as components
 
 # Returns a string of text from a list of PDFs
 # Uses PyPDF2 - PDF Reader
